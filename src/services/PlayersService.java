@@ -48,12 +48,17 @@ public class PlayersService {
 //          reads one line at a time
             while ((nextLine = reader.readNext()) != null) {
                 if (reader.nextLine[0] == playerID) {
-                    return PlayerDto.builder().playerId(Integer.valueOf(nextLine[0]))
-                            .birthYear(Integer.valueOf(nextLine[1]))
-                            .birthMonth(Integer.valueOf(nextLine[2]))
-                            .birthDay(Integer.valueOf(nextLine[3]))
-//                       and so on...
-                            .build();
+                    PlayerDto.PlayerDtoBuilder playerDtoBuilder =
+                            PlayerDto.builder()
+                                    .playerId(Integer.valueOf(nextLine[0]))
+                                    .birthYear(Integer.valueOf(nextLine[1]))
+                                    .birthMonth(Integer.valueOf(nextLine[2]))
+                                    .birthDay(Integer.valueOf(nextLine[3]));
+//                  handle all fields that can be null
+                    Optional.ofNullable(nextLine[7]).ifPresent(d ->
+                            playerDtoBuilder.deathYear(Integer.valueOf(d)));
+//                  and so on...
+                    return playerDtoBuilder.build();
                 }
             }
         } catch (Exception e) {
